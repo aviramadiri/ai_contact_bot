@@ -19,27 +19,15 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
         [ResponseType(typeof(void))]
         public virtual async Task<HttpResponseMessage> Post([FromBody] Activity activity)
         {
-            var reply = activity.CreateReply();
-            reply.Text = "hi there";
-            Attachment attach = new Attachment();
-            attach.ContentType = "application/vnd.microsoft.card.hero";
-            attach.Content = "{\r\n                \"title\": \"Your next meeting is with Shir Esh\",\r\n                \"subtitle\": \"Meeting tips\",\r\n                \"text\": \"    1) use small-talk.\n    2) use numbers.\",\r\n                \"images\": [\r\n                    {\r\n                        \"url\": \"https://static.wixstatic.com/media/db9144_6df95743434c4614bee7dc5bcb1508c7~mv2_d_1236_1592_s_2.png/v1/crop/x_0,y_0,w_1236,h_1235/fill/w_285,h_285,al_c,usm_0.66_1.00_0.01/db9144_6df95743434c4614bee7dc5bcb1508c7~mv2_d_1236_1592_s_2.png\",\r\n                        \"alt\": \"Shir Esh\",\r\n                    }\r\n                ],\r\n                \"buttons\": [\r\n                    {\r\n                        \"type\": \"openUrl\",\r\n                        \"title\": \"Linkedin\",\r\n                        \"image\": \"https://yt3.ggpht.com/a-/ACSszfGDvjYK2vL_d3Bglghs2VQhTwbPrTGWxBaNDQ=s900-mo-c-c0xffffffff-rj-k-no\",\r\n                        \"value\": \"https://www.linkedin.com/in/shir-esh-aa5981165/\"\r\n                    }\r\n                ]\r\n            }";
-            reply.Attachments.Add(attach);
-            var connector = new ConnectorClient(new System.Uri(activity.ServiceUrl));
-            
-            
-           
             // check if activity is of type message
             if (activity != null && activity.GetActivityType() == ActivityTypes.Message)
             {
-                //await Conversation.SendAsync(activity, () => new ContactDialog());
-                await connector.Conversations.ReplyToActivityAsync(reply);
+                await Conversation.SendAsync(activity, () => new EchoDialog());
             }
             else
             {
                 HandleSystemMessage(activity);
             }
-
             return new HttpResponseMessage(System.Net.HttpStatusCode.Accepted);
         }
 

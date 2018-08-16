@@ -1,3 +1,3 @@
 nuget restore
-msbuild Microsoft.Bot.Sample.SimpleEchoBot.sln -p:DeployOnBuild=true -p:PublishProfile=aicontactbot-Web-Deploy.pubxml -p:Password=yyPTh3nr6lERTeyMoAH5uuRu8yqjY6gdto3lxFufnxkNHhYgsZH0S7uwHrPs
+msbuild Microsoft.Bot.Sample.SimpleEchoBot.sln -p:DeployOnBuild=true -p:PublishProfile=contactbot-Web-Deploy.pubxml -p:Password=fqsGH1grcYinif0cmLJDneWyEW0Xls4DehPxe4PwYdHvFLDt4LgCsZNlbFpr
 
