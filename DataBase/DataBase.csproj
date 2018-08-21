@@ -46,7 +46,7 @@
     <Compile Include="TipMatrix.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Users\avadiri\source\repos\EntitiesLayer\EntitiesLayer.csproj">
+    <ProjectReference Include="..\EntitiesLayer\EntitiesLayer.csproj">
       <Project>{3F073B50-E506-4F61-81AE-C28E8CD63F73}</Project>
       <Name>EntitiesLayer</Name>
     </ProjectReference>
