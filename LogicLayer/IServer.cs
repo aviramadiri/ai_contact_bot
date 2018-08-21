@@ -17,12 +17,12 @@ namespace LogicLayer
         Meeting FindNextMeeting(Contact contact);
 
         /// <summary>
-        /// Find the last 2 meetings between 2 contacts
+        /// Find the last 2 meeting between 2 contacts
         /// </summary>
         /// <param name="a">contact number 1</param>
         /// <param name="b">contact number 2</param>
-        /// <returns>the last 2 meetings</returns>
-        List<Meeting> FindLastMeetingsWithContact(Contact a, Contact b);
+        /// <returns>the last meeting</returns>
+        List<Meeting> FindLastMeetingWithContact(Contact a, Contact b);
 
         /// <summary>
         /// returns the contact object by name
@@ -66,7 +66,7 @@ namespace LogicLayer
         void SetMeetingSatisfaction(Meeting meeting, Contact contact, MeetingSatisfaction satisfaction);
 
         /// <summary>
-        /// Get the tips that some contact gets (used after the meeting)
+        /// Get the tips that some contact gots (used after the meeting)
         /// </summary>
         /// <param name="meeting">the meeting</param>
         /// <param name="contact">the contact</param>

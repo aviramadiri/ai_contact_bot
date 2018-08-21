@@ -3,50 +3,89 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataBase;
 using EntitiesLayer;
 
 namespace LogicLayer
 {
     public class Server : IServer
     {
-        public List<Meeting> FindLastMeetingsWithContact(Contact a, Contact b)
+        public IDB DB { get; set; }
+        public Server()
         {
-            throw new NotImplementedException();
+            DB = MockDB.GetInstance();
+        }
+        public List<Meeting> FindLastMeetingWithContact(Contact a, Contact b)
+        {
+            return DB.FindLastMeeting(a, b);
         }
 
         public Meeting FindNextMeeting(Contact contact)
         {
-            throw new NotImplementedException();
+            return DB.FindNextMeeting(contact);
         }
 
         public Contact GetContactByName(string name)
         {
-            throw new NotImplementedException();
+            return DB.GetContactByName(name);
         }
 
         public List<Tip> GetGivenTips(Meeting meeting, Contact contact)
         {
-            throw new NotImplementedException();
+            MeetingInsights insights;
+            if (meeting.Insights.TryGetValue(contact, out insights)) {
+                return insights.Tips.Keys.ToList();
+            }
+            else
+            {
+                return new List<Tip>();
+            }
         }
 
         public List<Tip> GetTipsAboutPersonForMeeting(Meeting meeting, Contact contact, bool isCloseToTheMeeting)
         {
-            throw new NotImplementedException();
+            return DB.GetTipsAboutPersonForMeeting(meeting, contact, isCloseToTheMeeting);
         }
 
         public void RateTip(Meeting meeting, Contact contact, Tip tip, bool WasGood)
         {
-            throw new NotImplementedException();
+            int rate = WasGood ? 1 : -1;
+            int currRate;
+            if (contact.TipsRate.TryGetValue(tip, out currRate)) {
+                currRate = currRate + rate;
+                contact.TipsRate.Remove(tip);
+                contact.TipsRate.Add(tip, currRate);
+            }
+
+            MeetingInsights insights;
+            if (meeting.Insights.TryGetValue(contact, out insights))
+            {
+                int tipRate;
+                if (insights.Tips.TryGetValue(tip, out tipRate))
+                {
+                    tipRate = tipRate + rate;
+                    insights.Tips.Remove(tip);
+                    insights.Tips.Add(tip, tipRate);
+                }
+            }
         }
 
         public void SetMeetingPurpose(Meeting meeting, Contact contact, MeetingPurpose purpose)
         {
-            throw new NotImplementedException();
+            MeetingInsights insights;
+            if (meeting.Insights.TryGetValue(contact, out insights))
+            {
+                insights.Purpose = purpose;
+            }
         }
 
         public void SetMeetingSatisfaction(Meeting meeting, Contact contact, MeetingSatisfaction satisfaction)
         {
-            throw new NotImplementedException();
+            MeetingInsights insights;
+            if (meeting.Insights.TryGetValue(contact, out insights))
+            {
+                insights.Satisfaction = satisfaction;
+            }
         }
     }
 }

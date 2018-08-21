@@ -49,6 +49,10 @@
       <Project>{3F073B50-E506-4F61-81AE-C28E8CD63F73}</Project>
       <Name>EntitiesLayer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DataBase\DataBase.csproj">
+      <Project>{EB78BCD1-CD6A-4C78-9DC8-B962A761E431}</Project>
+      <Name>DataBase</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
