@@ -6,6 +6,7 @@ using Microsoft.Bot.Builder.Dialogs;
 using System.Web.Http.Description;
 using System.Net.Http;
 using SimpleEchoBot.Dialogs;
+using LogicLayer;
 
 namespace Microsoft.Bot.Sample.SimpleEchoBot
 {
@@ -20,6 +21,7 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
         [ResponseType(typeof(void))]
         public virtual async Task<HttpResponseMessage> Post([FromBody] Activity activity)
         {
+            var x = ServerMock.GetInstance();
             // check if activity is of type message
             if (activity != null && activity.GetActivityType() == ActivityTypes.Message)
             {
