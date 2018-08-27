@@ -20,7 +20,7 @@ namespace DataBase
             };
         }
 
-        internal List<Tip> GetTipsByPurposeAndSatisfaction(MeetingPurpose purpose, bool isCloseToTheMeeting)
+        internal List<Tip> GetTipsByPurposeAndSatisfaction(string purpose, bool isCloseToTheMeeting)
         {
             List<Tip> tips = Tips.Where(t => t.IsImmediately == isCloseToTheMeeting && t.Purposes.Contains(purpose)).ToList();
             return tips;

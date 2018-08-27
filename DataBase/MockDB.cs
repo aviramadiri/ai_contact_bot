@@ -98,7 +98,7 @@ namespace DataBase
         public List<Tip> GetTipsAboutPersonForMeeting(Meeting meeting, Contact contact, bool isCloseToTheMeeting)
         {
             MeetingInsights insights;
-            MeetingPurpose purpose = MeetingPurpose.general;
+            string purpose = MeetingPurpose.General;
             List<Tip> oldTips = new List<Tip>();
             if (meeting.Insights.TryGetValue(contact, out insights))
             {

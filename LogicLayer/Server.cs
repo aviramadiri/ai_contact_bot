@@ -70,7 +70,7 @@ namespace LogicLayer
             }
         }
 
-        public void SetMeetingPurpose(Meeting meeting, Contact contact, MeetingPurpose purpose)
+        public void SetMeetingPurpose(Meeting meeting, Contact contact, string purpose)
         {
             MeetingInsights insights;
             if (meeting.Insights.TryGetValue(contact, out insights))
@@ -79,7 +79,7 @@ namespace LogicLayer
             }
         }
 
-        public void SetMeetingSatisfaction(Meeting meeting, Contact contact, MeetingSatisfaction satisfaction)
+        public void SetMeetingSatisfaction(Meeting meeting, Contact contact, string satisfaction)
         {
             MeetingInsights insights;
             if (meeting.Insights.TryGetValue(contact, out insights))

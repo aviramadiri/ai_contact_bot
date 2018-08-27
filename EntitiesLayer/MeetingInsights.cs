@@ -9,26 +9,50 @@ namespace EntitiesLayer
     public class MeetingInsights
     {
         public Dictionary<Tip, int> Tips { get; set; }
-        public MeetingPurpose Purpose { get; set; }
-        public MeetingSatisfaction Satisfaction {get;set;}
+        public string Purpose { get; set; }
+        public string Satisfaction {get;set;}
 
         public MeetingInsights()
         {
             Tips = new Dictionary<Tip, int>();
-            Purpose = MeetingPurpose.general;
-            Satisfaction = MeetingSatisfaction.none;
+            Purpose = MeetingPurpose.General;
+            Satisfaction = MeetingSatisfaction.None;
         }
     }
 
-    public enum MeetingPurpose
+    public static class MeetingPurpose
     {
-        // TODO: what should be here?
-        general, p2, p3, p4
+        public static string General = "General";
+        public static string convince = "To convince";
+        public static string Motivate = "To motivate";
+        public static string Prize = "To prize";
+        public static string Critisize = "To Critisize";
+
+        public static List<string> GetPurposes()
+        {
+            return new List<string>()
+            {
+                General, convince, Motivate, Prize, Critisize
+            };
+        }
     }
 
-    public enum MeetingSatisfaction
+    public static class MeetingSatisfaction
     {
         // TODO: what should be here?
-        none, VeryGood, Good, Ok, NotGood, Bad
+
+        public static string None = "None";
+        public static string VeryGood = "Very Good";
+        public static string Good = "Good";
+        public static string NotGood = "Not Good";
+        public static string Bad = "Bad";
+
+        public static List<string> GetMeetingSatisfactions()
+        {
+            return new List<string>()
+            {
+                VeryGood, Good, NotGood, Bad
+            };
+        }
     }
 }

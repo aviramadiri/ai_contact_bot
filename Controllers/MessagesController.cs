@@ -48,51 +48,97 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
         private Activity CreateReply(Activity activity)
         {
             Activity replyToConversation;
-            if (string.Equals(activity.Text, UserMessage.FirstMessage, StringComparison.OrdinalIgnoreCase)) {
-                replyToConversation = activity.CreateReply("Hi there :)");
-                Attachment attachment = CreateFirstCard();
-                replyToConversation.Attachments.Add(attachment);
-            }
-            else if (string.Equals(activity.Text, UserMessage.SecondMessage, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(activity.Text, UserMessage.FirstMessage, StringComparison.OrdinalIgnoreCase))
             {
-                replyToConversation = activity.CreateReply("ok...");
-                Attachment attachment = CreateSecondCard();
+                replyToConversation = activity.CreateReply("Hi!");
+                replyToConversation.Attachments.Add(CreateGeneralMeetingCard(false));
+                replyToConversation.Attachments.Add(CreatePurposesCard());
+            }
+            else if (IsPurpose(activity.Text))
+            {
+                replyToConversation = activity.CreateReply();
+                Attachment attachment = CreateTipsForPurposeCard(activity.Text);
                 replyToConversation.Attachments.Add(attachment);
             }
             else if (string.Equals(activity.Text, UserMessage.ThirdMessage, StringComparison.OrdinalIgnoreCase))
             {
                 replyToConversation = activity.CreateReply("Hi again!");
-                Attachment attachment = CreateThirdCard();
+                Attachment attachment = CreateGeneralMeetingCard(true);
                 replyToConversation.Attachments.Add(attachment);
             }
             else if (string.Equals(activity.Text, UserMessage.FourthMessage, StringComparison.OrdinalIgnoreCase))
             {
-                replyToConversation = activity.CreateReply("I see the meeting is ended");
-                Attachment attachment = CreateFourtCard();
+                replyToConversation = activity.CreateReply();
+                Attachment attachment = CreateMeetingFeedbackCard();
+                replyToConversation.Attachments.Add(attachment);
+            }
+            else if (IsSatisfation(activity.Text))
+            {
+                replyToConversation = activity.CreateReply();
+                Attachment attachment = CreateTipsFeedbackCard(activity.Text);
                 replyToConversation.Attachments.Add(attachment);
             }
             else
             {
-                replyToConversation = activity.CreateReply(UserMessage.CrateHelpMessage());
+                replyToConversation = activity.CreateReply();
+                Attachment attachment = CreateHelpCard(activity.Text);
+                replyToConversation.Attachments.Add(attachment);
             }
             return replyToConversation;
         }
 
-        private Attachment CreateFirstCard()
+        // todo: build this card
+        private Attachment CreateTipsFeedbackCard(string message)
+        {
+            string title;
+            string subTitle;
+            if (message == MeetingSatisfaction.VeryGood || message == MeetingSatisfaction.Good)
+            {
+                title = "Good to hear!";
+                subTitle = "Hope my tips were helpful (:";
+            }
+            else
+            {
+                title = "it can't be that bad...";
+                subTitle = "Hope that at least my tips were helpful";
+            }
+            string text = "Please build this card: tips rating";
+
+            var card = new HeroCard //ThumbnailCard
+            {
+                Title = title,
+                Subtitle = subTitle,
+                Text = text
+        };
+
+            // Create the attachment.
+            Attachment attachment = new Attachment()
+            {
+                ContentType = HeroCard.ContentType,
+                Content = card
+            };
+            return attachment;
+        }
+
+        private Attachment CreateGeneralMeetingCard(bool isSupposedToStart)
         {
             var server = ServerMock.GetInstance();
             var myContact = server.GetContactByName("shir esh");
 
             Meeting meeting = server.FindNextMeeting(myContact);
             Contact otherContact = meeting.Attendees.Where(c => c != myContact).FirstOrDefault();
-            var tips = server.GetTipsAboutPersonForMeeting(meeting, myContact, false);
+            var tips = server.GetTipsAboutPersonForMeeting(meeting, myContact, isSupposedToStart);
             List<string> tipContents = tips.Select(x => x.Content).ToList();
+
+            string title = isSupposedToStart ? 
+                $"Your meeting with {otherContact.Name} is about to start..." : 
+                $"Your next meeting is with {otherContact.Name}";
 
             string concatenedTips = ConcatAllTips(tipContents);
 
             var card = new HeroCard //ThumbnailCard
             {
-                Title = $"Your next meeting is with {otherContact.Name}",
+                Title = title,
                 Subtitle = $"Meeting title: {meeting.Title}",
                 Text = concatenedTips,
                 Images = new List<CardImage>()
@@ -101,7 +147,7 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
                 },
                 Buttons = new List<CardAction>()
                 {
-                    new CardAction("openUrl", "Linkedin", value: otherContact.ImagePath)
+                    new CardAction("openUrl", "Linkedin")
                 }
             };
             
@@ -114,9 +160,40 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
             return attachment;
         }
 
-        // TODO: change this card!
-        private Attachment CreateSecondCard()
+        private Attachment CreatePurposesCard()
         {
+            // TODO: replace with MeetingPurpose
+            var purposes = new List<CardAction>();
+            var listOfPurposes = MeetingPurpose.GetPurposes();
+            foreach (var p in listOfPurposes)
+            {
+                purposes.Add(new CardAction("imBack", p, value:p));
+            }
+
+            var card = new HeroCard //ThumbnailCard
+            {
+                Title = $"What is the purpose of the meeting?",
+                Buttons = purposes
+            };
+
+            // Create the attachment.
+            Attachment attachment = new Attachment()
+            {
+                ContentType = HeroCard.ContentType,
+                Content = card
+            };
+            return attachment;
+        }
+
+        public bool IsPurpose(string message)
+        {
+            return MeetingPurpose.GetPurposes().Contains(message);
+        }
+
+        // TODO: change this card!
+        private Attachment CreateTipsForPurposeCard(string purpose)
+        {
+            // TODO: save the purpose
             var server = ServerMock.GetInstance();
             var myContact = server.GetContactByName("shir esh");
 
@@ -125,21 +202,12 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
             var tips = server.GetTipsAboutPersonForMeeting(meeting, myContact, false);
             List<string> tipContents = tips.Select(x => x.Content).ToList();
 
-            string concatenedTips = ConcatAllTips(tipContents);
+            string concatenedTips = ConcatAllTips(tipContents, NewLine());
 
             var card = new HeroCard //ThumbnailCard
             {
-                Title = $"Your next meeting is with {otherContact.Name}",
-                Subtitle = $"Meeting title: {meeting.Title}",
-                Text = concatenedTips,
-                Images = new List<CardImage>()
-                {
-                    new CardImage(otherContact.ImagePath)
-                },
-                Buttons = new List<CardAction>()
-                {
-                    new CardAction("openUrl", "Linkedin", value: otherContact.ImagePath)
-                }
+                Subtitle = $"Great! For this kind of meeting try to follow these tips:",
+                Text = concatenedTips
             };
 
             // Create the attachment.
@@ -152,31 +220,21 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
         }
 
         // TODO: change this card!
-        private Attachment CreateThirdCard()
+        private Attachment CreateMeetingFeedbackCard()
         {
-            var server = ServerMock.GetInstance();
-            var myContact = server.GetContactByName("shir esh");
-
-            Meeting meeting = server.FindNextMeeting(myContact);
-            Contact otherContact = meeting.Attendees.Where(c => c != myContact).FirstOrDefault();
-            var tips = server.GetTipsAboutPersonForMeeting(meeting, myContact, false);
-            List<string> tipContents = tips.Select(x => x.Content).ToList();
-
-            string concatenedTips = ConcatAllTips(tipContents);
+            // TODO: replace with MeetingPurpose
+            var satisfations = new List<CardAction>();
+            var satisfationsAsList = MeetingSatisfaction.GetMeetingSatisfactions();
+            foreach (var s in satisfationsAsList)
+            {
+                satisfations.Add(new CardAction("imBack", s, value:s));
+            }
 
             var card = new HeroCard //ThumbnailCard
             {
-                Title = $"Your next meeting is with {otherContact.Name}",
-                Subtitle = $"Meeting title: {meeting.Title}",
-                Text = concatenedTips,
-                Images = new List<CardImage>()
-                {
-                    new CardImage(otherContact.ImagePath)
-                },
-                Buttons = new List<CardAction>()
-                {
-                    new CardAction("openUrl", "Linkedin", value: otherContact.ImagePath)
-                }
+                Title = $"Looks like the meeting is ended (:",
+                Subtitle = "So how was the meeting?",
+                Buttons = satisfations
             };
 
             // Create the attachment.
@@ -188,41 +246,9 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
             return attachment;
         }
 
-        // TODO: change this card!
-        private Attachment CreateFourtCard()
+        public bool IsSatisfation(string message)
         {
-            var server = ServerMock.GetInstance();
-            var myContact = server.GetContactByName("shir esh");
-
-            Meeting meeting = server.FindNextMeeting(myContact);
-            Contact otherContact = meeting.Attendees.Where(c => c != myContact).FirstOrDefault();
-            var tips = server.GetTipsAboutPersonForMeeting(meeting, myContact, false);
-            List<string> tipContents = tips.Select(x => x.Content).ToList();
-
-            string concatenedTips = ConcatAllTips(tipContents);
-
-            var card = new HeroCard //ThumbnailCard
-            {
-                Title = $"Your next meeting is with {otherContact.Name}",
-                Subtitle = $"Meeting title: {meeting.Title}",
-                Text = concatenedTips,
-                Images = new List<CardImage>()
-                {
-                    new CardImage(otherContact.ImagePath)
-                },
-                Buttons = new List<CardAction>()
-                {
-                    new CardAction("openUrl", "Linkedin", value: otherContact.ImagePath)
-                }
-            };
-
-            // Create the attachment.
-            Attachment attachment = new Attachment()
-            {
-                ContentType = HeroCard.ContentType,
-                Content = card
-            };
-            return attachment;
+            return MeetingSatisfaction.GetMeetingSatisfactions().Contains(message);
         }
 
         private string NewLine()
@@ -235,10 +261,10 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
             return " \n\r ";
         }
 
-        private string ConcatAllTips(List<string> tips)
+        private string ConcatAllTips(List<string> tips, string title = "Meeting Tips:")
         {
             int i = 1;
-            var ans = new StringBuilder("Meeting Tips:");
+            var ans = new StringBuilder(title);
             foreach (string tip in tips)
             {
                 ans = ans.Append(NewLine()).Append($"   {i}) ").Append(tip);
@@ -275,20 +301,50 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
 
             return null;
         }
+
+        private Attachment CreateHelpCard(string text)
+        {
+            // TODO: replace with MeetingPurpose
+            var purposes = new List<CardAction>();
+            var listOfPurposes = MeetingPurpose.GetPurposes();
+            foreach (var p in listOfPurposes)
+            {
+                purposes.Add(new CardAction("imBack", p, value: p));
+            }
+
+            var card = new HeroCard //ThumbnailCard
+            {
+                Title = $"Hi there! (:",
+                Subtitle = $" I'm Yoda and I'm here to help ",
+                Text = "What would you like to know?",
+                Buttons = new List<CardAction>()
+                {
+                    new CardAction("imBack", UserMessage.FirstMessage, value: UserMessage.FirstMessage),
+                    new CardAction("imBack", UserMessage.ThirdMessage, value: UserMessage.ThirdMessage),
+                    new CardAction("imBack", UserMessage.FourthMessage, value: UserMessage.FourthMessage)
+                }
+            };
+
+            // Create the attachment.
+            Attachment attachment = new Attachment()
+            {
+                ContentType = HeroCard.ContentType,
+                Content = card
+            };
+            return attachment;
+        }
     }
 
     public static class UserMessage
     {
-        public static string FirstMessage = "my next meeting";
-        public static string SecondMessage = "next tips";
-        public static string ThirdMessage = "next immediate meeting";
-        public static string FourthMessage = "rate tips";
+        public static string FirstMessage = "What is my next meeting?";
+        public static string ThirdMessage = "Is there a meeting that about to start?";
+        public static string FourthMessage = "metting is ended";
 
         public static string CrateHelpMessage()
         {
-            string ans = "I'm sorry, I just understand the following requests:";
+            string ans = "I'm sorry, for now I just understand the following requests:";
             ans += "\n - " + FirstMessage;
-            ans += "\n - " + SecondMessage;
             ans += "\n - " + ThirdMessage;
             ans += "\n - " + FourthMessage;
             return ans;

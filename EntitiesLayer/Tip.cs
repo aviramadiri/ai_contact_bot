@@ -10,7 +10,7 @@ namespace EntitiesLayer
     {
         public string Content { get; set; }
         public List<CommunicationStyle> Styles { get; set; }
-        public List<MeetingPurpose> Purposes { get; set; }
+        public List<string> Purposes { get; set; }
         public bool IsImmediately { get; set; }
 
         public double CalculateRate(List<CommunicationStyle> styles)

@@ -76,11 +76,11 @@ namespace LogicLayer
         {
         }
 
-        public void SetMeetingPurpose(Meeting meeting, Contact contact, MeetingPurpose purpose)
+        public void SetMeetingPurpose(Meeting meeting, Contact contact, string purpose)
         {
         }
 
-        public void SetMeetingSatisfaction(Meeting meeting, Contact contact, MeetingSatisfaction satisfaction)
+        public void SetMeetingSatisfaction(Meeting meeting, Contact contact, string satisfaction)
         {
         }
     }

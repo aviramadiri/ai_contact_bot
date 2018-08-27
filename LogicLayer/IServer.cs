@@ -46,7 +46,7 @@ namespace LogicLayer
         /// <param name="meeting">the meeting</param>
         /// <param name="contact">the contact that set the purpose</param>
         /// <param name="purpose">the meeting purpose</param>
-        void SetMeetingPurpose(Meeting meeting, Contact contact, MeetingPurpose purpose);
+        void SetMeetingPurpose(Meeting meeting, Contact contact, string purpose);
 
         /// <summary>
         /// Set the rate for a tip, for a specific contact in a specific meeting
@@ -63,7 +63,7 @@ namespace LogicLayer
         /// <param name="meeting">the meeting</param>
         /// <param name="contact">the contact that gives the rate for the meeting</param>
         /// <param name="satisfaction">the rate for the meeting</param>
-        void SetMeetingSatisfaction(Meeting meeting, Contact contact, MeetingSatisfaction satisfaction);
+        void SetMeetingSatisfaction(Meeting meeting, Contact contact, string satisfaction);
 
         /// <summary>
         /// Get the tips that some contact gots (used after the meeting)
