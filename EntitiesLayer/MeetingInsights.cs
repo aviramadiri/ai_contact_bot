@@ -32,7 +32,7 @@ namespace EntitiesLayer
         {
             return new List<string>()
             {
-                General, convince, Motivate, Prize, Critisize
+                convince, Motivate, Prize, Critisize
             };
         }
     }
