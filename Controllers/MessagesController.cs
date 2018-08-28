@@ -151,6 +151,14 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
             Meeting meeting = server.FindNextMeeting(myContact);
             Contact otherContact = meeting.Attendees.Where(c => c != myContact).FirstOrDefault();
             var tips = server.GetTipsAboutPersonForMeeting(meeting, myContact, isSupposedToStart);
+            if (isSupposedToStart)
+            {
+                tips = tips.GetRange(4, 2);
+            }
+            else
+            {
+                tips = tips.GetRange(0, 2);
+            }
             List<string> tipContents = tips.Select(x => x.Content).ToList();
 
             string title = isSupposedToStart ? 
@@ -225,6 +233,7 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
             Meeting meeting = server.FindNextMeeting(myContact);
             Contact otherContact = meeting.Attendees.Where(c => c != myContact).FirstOrDefault();
             var tips = server.GetTipsAboutPersonForMeeting(meeting, myContact, false);
+            tips = tips.GetRange(2, 2);
             List<string> tipContents = tips.Select(x => x.Content).ToList();
 
             string concatenedTips = ConcatAllTips(tipContents, "");

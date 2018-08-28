@@ -30,7 +30,7 @@ namespace LogicLayer
 
         public static void ResetServer()
         {
-            instance.givenTips = new List<Tip>();
+          //  instance.givenTips = new List<Tip>();
         }
 
         private ServerMock()
@@ -41,9 +41,9 @@ namespace LogicLayer
             var m1 = new Meeting(2, "Going over technical tools", new DateTime(2018, 8, 20, 13, 0, 0), new List<Contact>() { shir, aviram });
             var m2 = new Meeting(3, "AI-Contact spec - going over requirments", new DateTime(2018, 8, 10, 11, 0, 0), new List<Contact>() { shir, aviram });
             prevMeetings = new List<Meeting>() { m1, m2 };
-            tips = new List<Tip>()
+            /*tips = new List<Tip>()
             {
-                new Tip(){Content = "skip the small-talk, you won't need it here (:" },
+                new Tip(){Content = "skip the small-talk, you won't need it here (:"},
                 new Tip(){Content = "Avoid sarcasm"},
                 new Tip(){Content = "stay on topic"},
                 new Tip(){Content = "be blunt and logical"},
@@ -60,9 +60,19 @@ namespace LogicLayer
                 new Tip(){Content = "express support and caring attitude"},
                 new Tip(){Content = "maintain high standards"},
                 new Tip(){Content = "put ideas to the test"}
+            };*/
+
+            tips = new List<Tip>()
+            {
+                new Tip() {Content = "Send reminders for close deadlines"},
+                new Tip() {Content = "Describe the mission objectives accurately"},
+                new Tip() {Content = "Emphasize the necessity for team effort"},
+                new Tip() {Content = "Express excitement and cast an exciting vision"},
+                new Tip() {Content = "Avoid too many details and stick to the big picture"},
+                new Tip() {Content = "Allow time for brainstorming"}
             };
 
-            givenTips = new List<Tip>();
+            givenTips = tips; //new List<Tip>();
         }
 
         private Contact CreateContact(string email, string name, string linkedinPath, string imagePath, int missionDriven = 0, int supporter = 0, int analyst = 0, int colorful = 0)
@@ -106,17 +116,18 @@ namespace LogicLayer
 
         public List<Tip> GetTipsAboutPersonForMeeting(Meeting meeting, Contact contact, bool isCloseToTheMeeting)
         {
-            var tempTips = tips.Where(t => !givenTips.Contains(t)).ToList();
-            Random rnd = new Random();
-            int i1 = rnd.Next(tempTips.Count);
-            var tip1 = tempTips[i1];
-            tempTips.Remove(tip1);
-            int i2 = rnd.Next(tempTips.Count);
-            var tip2 = tempTips[i2];
+            /* var tempTips = tips.Where(t => !givenTips.Contains(t)).ToList();
+             Random rnd = new Random();
+             int i1 = rnd.Next(tempTips.Count);
+             var tip1 = tempTips[i1];
+             tempTips.Remove(tip1);
+             int i2 = rnd.Next(tempTips.Count);
+             var tip2 = tempTips[i2];
 
-            givenTips.Add(tip1);
-            givenTips.Add(tip2);
-            return new List<Tip>() { tip1, tip2 };
+             givenTips.Add(tip1);
+             givenTips.Add(tip2);
+             return new List<Tip>() { tip1, tip2 }; */
+            return tips;
         }
 
         public void RateTip(Meeting meeting, Contact contact, Tip tip, bool WasGood)
