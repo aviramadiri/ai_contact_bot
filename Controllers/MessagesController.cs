@@ -109,7 +109,7 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
             if (message == MeetingSatisfaction.VeryGood || message == MeetingSatisfaction.Good)
             {
                 title = "Good to hear!";
-                subTitle = "Hope my tips were helpful (:";
+                subTitle = "Hope my tips were helpful :)";
             }
             else
             {
@@ -117,7 +117,7 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
                 subTitle = "Hope that at least my tips were helpful";
             }
             string tip = " <font size=\"3\" color=\"#6699ff\"> <b>   " + server.GetGivenTips(meeting, myContact).FirstOrDefault().Content + "</li> </b> </font> ";
-            string text = "So, What do you think about this tip? :)" + NewLine() + NewLine() + tip + NewLine();
+            string text = "So, What do you think about this tip?" + NewLine() + NewLine() + tip + NewLine();
 
             var card = new HeroCard //ThumbnailCard
             {
@@ -266,7 +266,7 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
 
             var card = new HeroCard //ThumbnailCard
             {
-                Title = $"Looks like the meeting is ended (:",
+                Title = $"Looks like the meeting has ended (:",
                 Subtitle = "So how was the meeting?",
                 Buttons = satisfations
             };
@@ -349,7 +349,7 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
 
             var card = new HeroCard //ThumbnailCard
             {
-                Title = $"Hi there! (:",
+                Title = $"Hi there! :)",
                 Subtitle = $" I'm Yoda and I'm here to help ",
                 Text = "What would you like to know?",
                 Buttons = new List<CardAction>()
@@ -373,8 +373,8 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
     public static class UserMessage
     {
         public static string FirstMessage = "What is my next meeting?";
-        public static string ThirdMessage = "Is there a meeting that about to start?";
-        public static string FourthMessage = "metting is ended";
+        public static string ThirdMessage = "Is there a meeting that's about to start?";
+        public static string FourthMessage = "metting has ended";
 
         public static string CrateHelpMessage()
         {
