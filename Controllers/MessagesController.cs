@@ -167,9 +167,10 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
 
             string concatenedTips = ConcatAllTips(tipContents);
 
-            var linkedinLogo = @"data:image/png;base64,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";
+            var linkedinLogo = @"https://theforkliftpro.com/wp-content/uploads/2014/09/linkedin_Icon.png";
+            var linkedinButton = new CardAction("openUrl", "LinkedIn", value: otherContact.LinkedinPath, image: linkedinLogo);
 
-            var card = new ThumbnailCard// HeroCard //ThumbnailCard
+            var card = new ThumbnailCard// HeroCard
             {
                 Title = title,
                 Subtitle = $"Meeting title: {meeting.Title}",
@@ -180,7 +181,7 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
                 },
                 Buttons = new List<CardAction>()
                 {
-                    new CardAction("openUrl","LinkedIn",value:otherContact.LinkedinPath, image: linkedinLogo)
+                    linkedinButton
                 }
             };
             
